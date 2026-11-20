@@ -9,6 +9,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.rclm.blog.domain.PostStatus;
 import com.rclm.blog.domain.dtos.CategoryDto;
+import com.rclm.blog.domain.dtos.CreateCategoryRequest;
 import com.rclm.blog.domain.entities.Category;
 import com.rclm.blog.domain.entities.Post;
 
@@ -16,6 +17,8 @@ import com.rclm.blog.domain.entities.Post;
 public interface CategoryMapper {
   @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount")
   CategoryDto toDto(Category category);
+
+  Category toEntity(CreateCategoryRequest req);
 
   @Named("calculatePostCount")
   default long calculatePostCount(List<Post> posts) {
