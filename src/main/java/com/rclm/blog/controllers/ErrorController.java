@@ -32,4 +32,13 @@ public class ErrorController {
       .build();
     return(new ResponseEntity<>(error, HttpStatus.BAD_REQUEST));
   }
+
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<ApiErrorResponse> handleIllegalStateException(IllegalStateException e) {
+    ApiErrorResponse error = ApiErrorResponse.builder()
+      .status(HttpStatus.CONFLICT.value())
+      .message(e.getMessage())
+      .build();
+    return(new ResponseEntity<>(error, HttpStatus.BAD_REQUEST));
+  }
 }
