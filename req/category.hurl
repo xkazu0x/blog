@@ -11,5 +11,6 @@
 # {
 #   "name": "Game Development"
 # }
+# HTTP 200
 
 # DELETE http://localhost:8080/api/v1/categories/{id}
