@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.rclm.blog.services.AuthService;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -49,6 +50,23 @@ public class AuthServiceImpl implements AuthService {
       .signWith(getSigningKey(), SignatureAlgorithm.HS256)
       .compact();
     return(result);
+  }
+
+  @Override
+  public UserDetails
+  validateToken(String token) {
+    String username = extractUsername(token);
+    return(userDetailsService.loadUserByUsername(username));
+  }
+
+  private String
+  extractUsername(String token) {
+    Claims claims = Jwts.parserBuilder()
+      .setSigningKey(getSigningKey())
+      .build()
+      .parseClaimsJws(token)
+      .getBody();
+    return(claims.getSubject());
   }
 
   private Key

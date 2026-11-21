@@ -2,6 +2,7 @@ package com.rclm.blog.security;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
+public class BlogUserDetails implements UserDetails {
   private final User user;
 
   @Override
@@ -33,5 +34,10 @@ public class UserDetailsImpl implements UserDetails {
   public String
   getUsername() {
     return(user.getEmail());
+  }
+
+  public UUID
+  getId() {
+    return(user.getId());
   }
 }
