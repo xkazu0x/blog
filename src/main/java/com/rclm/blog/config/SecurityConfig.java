@@ -14,7 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain
+  securityFilterChain(HttpSecurity http) throws Exception {
     http
       .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
@@ -22,18 +23,20 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.GET, "/api/v1/tags/**").permitAll()
         .anyRequest().authenticated())
       .csrf(csrf -> csrf.disable())
-      .sessionManagement(session ->
-          session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+      .sessionManagement(session -> session
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     return(http.build());
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
+  public PasswordEncoder
+  passwordEncoder() {
     return(PasswordEncoderFactories.createDelegatingPasswordEncoder());
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+  public AuthenticationManager
+  authenticationManager(AuthenticationConfiguration config) throws Exception {
     return(config.getAuthenticationManager());
   }
 }
