@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TagResponse {
-  private UUID    id;
-  private String  name;
-  private Integer postCount;
+public class AuthorDto {
+  private UUID   id;
+  private String name;
 }
