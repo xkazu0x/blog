@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.rclm.blog.domain.entities.Post;
+import com.rclm.blog.domain.entities.User;
 
 public interface PostService {
-  List<Post> getPosts(UUID categoryId, UUID tagId);
+  List<Post> getPublishedPostsMaybeByCategoryAndOrTag(UUID categoryId, UUID tagId);
+  List<Post> getUserDraftedPosts(User user);
 }

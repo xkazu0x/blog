@@ -10,6 +10,7 @@ import com.rclm.blog.domain.PostStatus;
 import com.rclm.blog.domain.entities.Category;
 import com.rclm.blog.domain.entities.Post;
 import com.rclm.blog.domain.entities.Tag;
+import com.rclm.blog.domain.entities.User;
 import com.rclm.blog.repositories.PostRepository;
 import com.rclm.blog.services.CategoryService;
 import com.rclm.blog.services.PostService;
@@ -26,7 +27,7 @@ public class PostServiceImpl implements PostService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<Post> getPosts(UUID categoryId, UUID tagId) {
+  public List<Post> getPublishedPostsMaybeByCategoryAndOrTag(UUID categoryId, UUID tagId) {
     if (categoryId != null && tagId != null) {
       Category category = categoryService.getCategoryById(categoryId);
       Tag tag = tagService.getTagById(tagId);
@@ -41,5 +42,10 @@ public class PostServiceImpl implements PostService {
       return(postRepository.findAllByStatusAndTagsContaining(PostStatus.PUBLISHED, tag));
     }
     return(postRepository.findAllByStatus(PostStatus.PUBLISHED));
+  }
+
+  @Override
+  public List<Post> getUserDraftedPosts(User user) {
+    return(postRepository.findAllByAuthorAndStatus(user, PostStatus.DRAFT));
   }
 }
