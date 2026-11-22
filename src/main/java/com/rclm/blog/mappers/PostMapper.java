@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import com.rclm.blog.domain.CreatePostRequest;
+import com.rclm.blog.domain.dtos.CreatePostRequestDto;
 import com.rclm.blog.domain.dtos.PostDto;
 import com.rclm.blog.domain.entities.Post;
 
@@ -13,4 +15,6 @@ public interface PostMapper {
   @Mapping(target = "category", source = "category")
   @Mapping(target = "tags",     source = "tags")
   PostDto toDto(Post post);
+
+  CreatePostRequest toCreatePostRequest(CreatePostRequestDto dto);
 }

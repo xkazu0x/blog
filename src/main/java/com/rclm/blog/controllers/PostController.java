@@ -3,13 +3,18 @@ package com.rclm.blog.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rclm.blog.domain.CreatePostRequest;
+import com.rclm.blog.domain.dtos.CreatePostRequestDto;
 import com.rclm.blog.domain.dtos.PostDto;
 import com.rclm.blog.domain.entities.Post;
 import com.rclm.blog.domain.entities.User;
@@ -28,19 +33,31 @@ public class PostController {
   private final PostMapper  postMapper;
 
   @GetMapping
-  public ResponseEntity<List<PostDto>> getPublishedPosts(
-      @RequestParam(required = false) UUID categoryId,
-      @RequestParam(required = false) UUID tagId) {
-    List<Post>    posts    = postService.getPublishedPostsMaybeByCategoryAndOrTag(categoryId, tagId);
+  public ResponseEntity<List<PostDto>>
+  getPublishedPosts(@RequestParam(required = false) UUID categoryId,
+                    @RequestParam(required = false) UUID tagId) {
+    List<Post> posts = postService.getPublishedPostsMaybeByCategoryAndOrTag(categoryId, tagId);
     List<PostDto> postDtos = posts.stream().map(postMapper::toDto).toList();
     return(ResponseEntity.ok(postDtos));
   }
 
   @GetMapping(path = "/drafts")
-  public ResponseEntity<List<PostDto>> getUserDraftedPosts(@RequestAttribute UUID userId) {
+  public ResponseEntity<List<PostDto>>
+  getUserDraftedPosts(@RequestAttribute UUID userId) {
     User user = userService.getUserById(userId);
-    List<Post>    draftedPosts    = postService.getUserDraftedPosts(user);
+    List<Post> draftedPosts = postService.getUserDraftedPosts(user);
     List<PostDto> draftedPostDtos = draftedPosts.stream().map(postMapper::toDto).toList();
     return(ResponseEntity.ok(draftedPostDtos));
+  }
+
+  @PostMapping
+  public ResponseEntity<PostDto>
+  createUserPost(@RequestAttribute UUID userId,
+                 @RequestBody CreatePostRequestDto createPostRequestDto) {
+    User user = userService.getUserById(userId);
+    CreatePostRequest createPostRequest = postMapper.toCreatePostRequest(createPostRequestDto);
+    Post createdPost = postService.createUserPost(user, createPostRequest);
+    PostDto createdPostDto = postMapper.toDto(createdPost);
+    return(new ResponseEntity<>(createdPostDto, HttpStatus.CREATED));
   }
 }

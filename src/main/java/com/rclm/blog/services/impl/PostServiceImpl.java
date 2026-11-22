@@ -1,11 +1,14 @@
 package com.rclm.blog.services.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.rclm.blog.domain.CreatePostRequest;
 import com.rclm.blog.domain.PostStatus;
 import com.rclm.blog.domain.entities.Category;
 import com.rclm.blog.domain.entities.Post;
@@ -47,5 +50,25 @@ public class PostServiceImpl implements PostService {
   @Override
   public List<Post> getUserDraftedPosts(User user) {
     return(postRepository.findAllByAuthorAndStatus(user, PostStatus.DRAFT));
+  }
+
+  @Override
+  @Transactional
+  public Post
+  createUserPost(User user, CreatePostRequest createPostRequest) {
+    Post newPost = new Post();
+    newPost.setTitle(createPostRequest.getTitle());
+    newPost.setContent(createPostRequest.getContent());
+    newPost.setStatus(createPostRequest.getStatus());
+    newPost.setAuthor(user);
+
+    Category category = categoryService.getCategoryById(createPostRequest.getCategoryId());
+    newPost.setCategory(category);
+
+    Set<UUID> tagIds = createPostRequest.getTagIds();
+    List<Tag> tags = tagService.getTagByIds(tagIds);
+    newPost.setTags(new HashSet<>(tags));
+
+    return(postRepository.save(newPost));
   }
 }
